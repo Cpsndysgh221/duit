@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinTrack - Keuangan Pribadi</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --blue: #2563eb;
+    --bg: #f5f8ff;
+    --text: #1e293b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    background: white;
+    padding: 28px 18px;
+    border-right: 1px solid #e8edf5;
+}
+
+.brand {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--blue);
+    margin-bottom: 42px;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.menu:hover, .menu.active {
+    background: #eff6ff;
+    color: var(--blue);
+}
+
+.main {
+    margin-left: 250px;
+    padding: 32px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.card-box {
+    background: white;
+    border: 1px solid #edf0f5;
+    border-radius: 15px;
+    padding: 23px;
+    height: 100%;
+    box-shadow: 0 4px 15px rgba(15,23,42,.025);
+}
+
+.card-box small { color: #64748b; }
+
+.card-box h3 {
+    font-size: 25px;
+    font-weight: 750;
+    margin-top: 12px;
+}
+
+.icon-box {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 21px;
+}
+
+.blue { background: #eff6ff; color: #2563eb; }
+.green { background: #ecfdf5; color: #16a34a; }
+.red { background: #fef2f2; color: #dc2626; }
+.purple { background: #f5f3ff; color: #7c3aed; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+.table { vertical-align: middle; }
+.table th {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+    background: #f8fafc;
+}
+
+.btn-primary {
+    background: var(--blue);
+    border: none;
+}
+
+.btn-primary:hover { background: #1d4ed8; }
+
+.form-control, .form-select {
+    padding: 11px;
+    border-radius: 9px;
+}
+
+.badge-income {
+    color: #16a34a;
+    background: #ecfdf5;
+}
+
+.badge-expense {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+@media(max-width:768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 15px;
+    }
+
+    .brand { margin-bottom: 12px; }
+
+    .nav-list {
+        display: flex;
+        overflow-x: auto;
+    }
+
+    .menu {
+        white-space: nowrap;
+        margin: 0 5px 0 0;
+        padding: 10px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .topbar { gap: 10px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="brand">
+        <i class="bi bi-wallet2"></i> FinTrack
+    </div>
+
+    <small class="text-secondary ms-3">MENU UTAMA</small>
+
+    <div class="nav-list mt-3">
+        <a class="menu active" onclick="showPage('dashboard',this)">
+            <i class="bi bi-grid"></i> Dashboard
+        </a>
+        <a class="menu" onclick="showPage('transaksi',this)">
+            <i class="bi bi-arrow-left-right"></i> Transaksi
+        </a>
+        <a class="menu" onclick="showPage('laporan',this)">
+            <i class="bi bi-bar-chart"></i> Laporan
+        </a>
+        <a class="menu" onclick="showPage('pengguna',this)">
+            <i class="bi bi-person"></i> Profil
+        </a>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<div class="topbar">
+    <div>
+        <h4 class="fw-bold mb-1" id="pageTitle">Dashboard</h4>
+        <small class="text-secondary">Selamat datang di FinTrack!</small>
+    </div>
+
+    <button class="btn btn-primary" onclick="openModal()">
+        <i class="bi bi-plus-lg"></i> Tambah Transaksi
+    </button>
+</div>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="section active">
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3 col-6">
+            <div class="card-box">
+                <div class="icon-box blue"><i class="bi bi-wallet2"></i></div>
+                <small>Total Saldo</small>
+                <h3 id="saldo">Rp 0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div class="card-box">
+                <div class="icon-box green"><i class="bi bi-arrow-down-left"></i></div>
+                <small>Pemasukan</small>
+                <h3 id="income">Rp 0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div class="card-box">
+                <div class="icon-box red"><i class="bi bi-arrow-up-right"></i></div>
+                <small>Pengeluaran</small>
+                <h3 id="expense">Rp 0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6">
+            <div class="card-box">
+                <div class="icon-box purple"><i class="bi bi-receipt"></i></div>
+                <small>Total Transaksi</small>
+                <h3 id="total">0</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+            <div class="card-box">
+                <h6 class="fw-bold mb-4">Grafik Keuangan</h6>
+                <canvas id="financeChart" height="120"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card-box">
+                <h6 class="fw-bold mb-4">Komposisi Keuangan</h6>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-box">
+        <h6 class="fw-bold mb-3">Transaksi Terbaru</h6>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Keterangan</th>
+                        <th>Jenis</th>
+                        <th>Tanggal</th>
+                        <th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody id="recentTransactions"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- TRANSAKSI -->
+<section id="transaksi" class="section">
+    <div class="card-box">
+        <div class="d-flex justify-content-between mb-4">
+            <h5 class="fw-bold">Riwayat Transaksi</h5>
+            <button class="btn btn-primary btn-sm" onclick="openModal()">+ Tambah</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Keterangan</th>
+                        <th>Kategori</th>
+                        <th>Jenis</th>
+                        <th>Tanggal</th>
+                        <th>Jumlah</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="allTransactions"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- LAPORAN -->
+<section id="laporan" class="section">
+    <div class="card-box">
+        <h5 class="fw-bold mb-3">Laporan Keuangan</h5>
+
+        <label class="form-label">Pilih Bulan</label>
+        <input type="month" class="form-control mb-3" id="filterMonth">
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card-box">
+                    <small>Pemasukan</small>
+                    <h4 class="text-success" id="reportIncome">Rp 0</h4>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-box">
+                    <small>Pengeluaran</small>
+                    <h4 class="text-danger" id="reportExpense">Rp 0</h4>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-box">
+                    <small>Selisih</small>
+                    <h4 id="reportBalance">Rp 0</h4>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary mt-4" onclick="window.print()">
+            <i class="bi bi-printer"></i> Cetak Laporan
+        </button>
+    </div>
+</section>
+
+<!-- PROFIL -->
+<section id="pengguna" class="section">
+    <div class="card-box" style="max-width:500px">
+        <h5 class="fw-bold mb-4">Profil Pengguna</h5>
+
+        <label class="form-label">Nama Pengguna</label>
+        <input type="text" id="userName" class="form-control mb-3">
+
+        <label class="form-label">Email</label>
+        <input type="email" id="userEmail" class="form-control mb-3">
+
+        <button class="btn btn-primary" onclick="saveProfile()">Simpan Profil</button>
+    </div>
+</section>
+
+</main>
+
+<!-- MODAL TRANSAKSI -->
+<div class="modal fade" id="transactionModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content border-0 rounded-4">
+
+    <div class="modal-header">
+        <h5 class="modal-title fw-bold">Tambah Transaksi</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+
+    <div class="modal-body">
+
+        <form id="transactionForm">
+
+            <label class="form-label">Keterangan</label>
+            <input type="text" class="form-control mb-3" id="description" placeholder="Contoh: Gaji bulanan" required>
+
+            <label class="form-label">Jenis Transaksi</label>
+            <select class="form-select mb-3" id="type">
+                <option value="income">Pemasukan</option>
+                <option value="expense">Pengeluaran</option>
+            </select>
+
+            <label class="form-label">Kategori</label>
+            <input type="text" class="form-control mb-3" id="category" placeholder="Contoh: Gaji, Makanan" required>
+
+            <label class="form-label">Jumlah (Rupiah)</label>
+            <input type="number" class="form-control mb-3" id="amount" min="1" step="1" placeholder="Contoh: 500000" required>
+
+            <label class="form-label">Tanggal</label>
+            <input type="date" class="form-control mb-4" id="date" required>
+
+            <button class="btn btn-primary w-100">Simpan Transaksi</button>
+
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// DATA
+let transactions = JSON.parse(localStorage.getItem("fintrack_data") || "[]");
+
+let profile = JSON.parse(localStorage.getItem("fintrack_profile") || '{"name":"Pengguna FinTrack","email":"user@email.com"}');
+
+let financeChart, pieChart;
+
+// FORMAT RUPIAH
+function rupiah(number) {
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+    }).format(number);
+}
+
+// NAVIGASI
+function showPage(page, element) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".menu").forEach(m => m.classList.remove("active"));
+    element.classList.add("active");
+
+    const titles = {
+        dashboard: "Dashboard",
+        transaksi: "Riwayat Transaksi",
+        laporan: "Laporan Keuangan",
+        pengguna: "Profil Pengguna"
+    };
+
+    document.getElementById("pageTitle").textContent = titles[page];
+
+    updateApp();
+}
+
+// MODAL
+function openModal() {
+    document.getElementById("transactionForm").reset();
+    document.getElementById("date").value = new Date().toISOString().slice(0,10);
+    bootstrap.Modal.getOrCreateInstance(document.getElementById("transactionModal")).show();
+}
+
+// SIMPAN TRANSAKSI
+document.getElementById("transactionForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const transaction = {
+        id: Date.now(),
+        description: document.getElementById("description").value.trim(),
+        type: document.getElementById("type").value,
+        category: document.getElementById("category").value.trim(),
+        amount: Number(document.getElementById("amount").value),
+        date: document.getElementById("date").value
+    };
+
+    if (!transaction.description || !transaction.category ||
+        !Number.isSafeInteger(transaction.amount) || transaction.amount <= 0 ||
+        !transaction.date) {
+        alert("Periksa kembali data transaksi.");
+        return;
+    }
+
+    transactions.push(transaction);
+    saveData();
+
+    bootstrap.Modal.getInstance(document.getElementById("transactionModal")).hide();
+    updateApp();
+});
+
+// SIMPAN DATA
+function saveData() {
+    localStorage.setItem("fintrack_data", JSON.stringify(transactions));
+}
+
+// HITUNG DATA
+function updateApp() {
+
+    let income = transactions
+        .filter(t => t.type === "income")
+        .reduce((sum,t) => sum + t.amount,0);
+
+    let expense = transactions
+        .filter(t => t.type === "expense")
+        .reduce((sum,t) => sum + t.amount,0);
+
+    document.getElementById("saldo").textContent = rupiah(income-expense);
+    document.getElementById("income").textContent = rupiah(income);
+    document.getElementById("expense").textContent = rupiah(expense);
+    document.getElementById("total").textContent = transactions.length;
+
+    renderTransactions();
+    renderCharts();
+    renderReport();
+}
+
+// TAMPILKAN TRANSAKSI
+function renderTransactions() {
+
+    const sorted = [...transactions].sort((a,b) => b.date.localeCompare(a.date) || b.id-a.id);
+
+    document.getElementById("allTransactions").innerHTML =
+        sorted.map(t => `
+        <tr>
+            <td>${escapeHTML(t.description)}</td>
+            <td>${escapeHTML(t.category)}</td>
+            <td>
+                <span class="badge ${t.type === "income" ? "badge-income" : "badge-expense"}">
+                    ${t.type === "income" ? "Pemasukan" : "Pengeluaran"}
+                </span>
+            </td>
+            <td>${t.date}</td>
+            <td class="${t.type === "income" ? "text-success" : "text-danger"} fw-bold">
+                ${t.type === "income" ? "+" : "-"}${rupiah(t.amount)}
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteTransaction(${t.id})">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        </tr>`).join("");
+
+    document.getElementById("recentTransactions").innerHTML =
+        sorted.slice(0,5).map(t => `
+        <tr>
+            <td>${escapeHTML(t.description)}</td>
+            <td>${t.type === "income" ? "Pemasukan" : "Pengeluaran"}</td>
+            <td>${t.date}</td>
+            <td class="fw-bold">${rupiah(t.amount)}</td>
+        </tr>`).join("");
+}
+
+// AMANKAN TEKS
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;",
+        '"':"&quot;", "'":"&#39;"
+    })[char]);
+}
+
+// HAPUS
+function deleteTransaction(id) {
+    if(confirm("Yakin ingin menghapus transaksi ini?")) {
+        transactions = transactions.filter(t => t.id !== id);
+        saveData();
+        updateApp();
+    }
+}
+
+// GRAFIK
+function renderCharts() {
+
+    let months = [];
+    let incomes = [];
+    let expenses = [];
+
+    for(let i=5; i>=0; i--) {
+        let d = new Date();
+        d.setDate(1);
+        d.setMonth(d.getMonth()-i);
+
+        let key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+
+        months.push(d.toLocaleDateString("id-ID",{month:"short",year:"2-digit"}));
+
+        let monthly = transactions.filter(t => t.date.startsWith(key));
+
+        incomes.push(monthly.filter(t=>t.type==="income").reduce((s,t)=>s+t.amount,0));
+        expenses.push(monthly.filter(t=>t.type==="expense").reduce((s,t)=>s+t.amount,0));
+    }
+
+    if(financeChart) financeChart.destroy();
+    if(pieChart) pieChart.destroy();
+
+    financeChart = new Chart(document.getElementById("financeChart"), {
+        type:"bar",
+        data:{
+            labels:months,
+            datasets:[
+                {label:"Pemasukan",data:incomes,backgroundColor:"#2563eb",borderRadius:6},
+                {label:"Pengeluaran",data:expenses,backgroundColor:"#f87171",borderRadius:6}
+            ]
+        },
+        options:{
+            responsive:true,
+            plugins:{legend:{position:"bottom"}},
+            scales:{y:{beginAtZero:true}}
+        }
+    });
+
+    pieChart = new Chart(document.getElementById("pieChart"), {
+        type:"doughnut",
+        data:{
+            labels:["Pemasukan","Pengeluaran"],
+            datasets:[{
+                data:[
+                    incomes.reduce((a,b)=>a+b,0),
+                    expenses.reduce((a,b)=>a+b,0)
+                ],
+                backgroundColor:["#2563eb","#f87171"],
+                borderWidth:0
+            }]
+        },
+        options:{
+            plugins:{legend:{position:"bottom"}},
+            cutout:"70%"
+        }
+    });
+}
+
+// LAPORAN BULANAN
+document.getElementById("filterMonth").value = new Date().toISOString().slice(0,7);
+document.getElementById("filterMonth").addEventListener("change",renderReport);
+
+function renderReport() {
+    let month = document.getElementById("filterMonth").value;
+
+    let data = transactions.filter(t=>t.date.startsWith(month));
+
+    let income = data.filter(t=>t.type==="income").reduce((s,t)=>s+t.amount,0);
+    let expense = data.filter(t=>t.type==="expense").reduce((s,t)=>s+t.amount,0);
+
+    document.getElementById("reportIncome").textContent = rupiah(income);
+    document.getElementById("reportExpense").textContent = rupiah(expense);
+    document.getElementById("reportBalance").textContent = rupiah(income-expense);
+}
+
+// PROFIL
+function saveProfile() {
+    profile.name = document.getElementById("userName").value.trim();
+    profile.email = document.getElementById("userEmail").value.trim();
+
+    if(!profile.name || !profile.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
+        alert("Isi nama dan email dengan benar.");
+        return;
+    }
+
+    localStorage.setItem("fintrack_profile",JSON.stringify(profile));
+    alert("Profil berhasil disimpan!");
+}
+
+document.getElementById("userName").value = profile.name;
+document.getElementById("userEmail").value = profile.email;
+
+updateApp();
+
+</script>
+</body>
+</html>
