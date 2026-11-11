@@ -4,834 +4,1090 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FinTrack - Financial Management</title>
+<title>FinTrack - Personal Finance</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root {
-    --primary:#2563eb;
-    --bg:#f5f7fb;
-    --dark:#172033;
-    --muted:#8490a5;
-    --border:#e9edf4;
+    --primary: #315efb;
+    --primary-light: #edf2ff;
+    --dark: #17233c;
+    --muted: #8994a8;
+    --background: #f5f7fc;
+    --border: #e8edf5;
+    --green: #16a36a;
+    --red: #e55353;
 }
-* {box-sizing:border-box}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    margin:0;
-    background:var(--bg);
-    color:var(--dark);
-    font-family:Inter,sans-serif;
+    background: var(--background);
+    color: var(--dark);
+    font-family: "Segoe UI", Arial, sans-serif;
+    overflow-x: hidden;
 }
+
+button, input, select {
+    font-family: inherit;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
 .sidebar {
-    width:250px;
-    height:100vh;
-    position:fixed;
-    top:0;left:0;
-    background:white;
-    border-right:1px solid var(--border);
-    padding:25px 18px;
-    z-index:1000;
-    transition:.3s;
+    width: 255px;
+    background: #fff;
+    border-right: 1px solid var(--border);
+    padding: 28px 18px;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
+
 .brand {
-    display:flex;
-    align-items:center;
-    gap:11px;
-    font-size:21px;
-    font-weight:800;
-    margin:5px 10px 42px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    margin-bottom: 42px;
 }
+
 .brand-icon {
-    width:40px;height:40px;
-    display:grid;place-items:center;
-    background:var(--primary);
-    color:white;border-radius:12px;
+    background: var(--primary);
+    color: white;
+    width: 43px;
+    height: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 13px;
+    font-size: 22px;
 }
-.menu-label {
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:1.3px;
-    color:#a1aabc;
-    padding:0 12px;
-    margin-bottom:12px;
+
+.brand h4 {
+    font-weight: 800;
+    font-size: 21px;
+    margin: 0;
 }
-.nav-link-custom {
-    display:flex;
-    align-items:center;
-    gap:13px;
-    padding:13px 14px;
-    margin-bottom:7px;
-    color:#7b879b;
-    font-size:13px;
-    font-weight:600;
-    border-radius:10px;
-    cursor:pointer;
-    text-decoration:none;
+
+.brand span {
+    color: var(--primary);
 }
-.nav-link-custom i {font-size:18px}
-.nav-link-custom:hover,.nav-link-custom.active {
-    background:#eff6ff;
-    color:var(--primary);
+
+.menu-title {
+    color: #a3adbd;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 0 13px;
+    margin-bottom: 12px;
 }
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.nav-item {
+    border: none;
+    background: transparent;
+    padding: 13px 14px;
+    border-radius: 11px;
+    color: #78859a;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.nav-item i {
+    font-size: 18px;
+}
+
+.nav-item:hover {
+    background: #f5f7ff;
+    color: var(--primary);
+}
+
+.nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
 .sidebar-bottom {
-    position:absolute;
-    bottom:25px;left:18px;right:18px;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
 }
-.main {
-    margin-left:250px;
-    padding:28px 35px;
-    min-height:100vh;
+
+.user-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
 }
-.topbar {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:30px;
-}
-.page-title {font-size:23px;font-weight:800;margin:0}
-.page-subtitle {font-size:12px;color:var(--muted);margin-top:7px}
-.user-profile {display:flex;align-items:center;gap:11px}
+
 .avatar {
-    width:40px;height:40px;
-    border-radius:50%;
-    display:grid;place-items:center;
-    background:#dbeafe;color:var(--primary);
-    font-weight:800;
+    width: 39px;
+    height: 39px;
+    background: #e9edff;
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
 }
-.user-name {font-size:12px;font-weight:700}
-.user-role {font-size:10px;color:var(--muted)}
-.page {display:none;animation:fade .2s}
-.page.active {display:block}
-@keyframes fade {
-    from {opacity:0;transform:translateY(5px)}
-    to {opacity:1;transform:translateY(0)}
+
+.user-mini strong {
+    font-size: 13px;
+    display: block;
 }
-.stat-card,.panel,.profile-card {
-    background:white;
-    border:1px solid var(--border);
-    border-radius:15px;
-    padding:21px;
-    height:100%;
+
+.user-mini small {
+    color: var(--muted);
+    font-size: 11px;
 }
-.stat-top {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:20px;
+
+/* MAIN */
+.main {
+    width: calc(100% - 255px);
+    margin-left: 255px;
+    padding: 30px 34px 50px;
+    min-width: 0;
 }
-.stat-label {font-size:12px;color:var(--muted);font-weight:600}
-.stat-icon {
-    width:39px;height:39px;
-    border-radius:11px;
-    display:grid;place-items:center;
-    font-size:18px;
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
 }
-.blue {background:#eff6ff;color:#2563eb}
-.green {background:#ecfdf5;color:#059669}
-.red {background:#fff1f2;color:#e11d48}
-.purple {background:#f5f3ff;color:#7c3aed}
+
+.topbar h2 {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.topbar p {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.date-label {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #657187;
+    font-size: 12px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.section-title {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+/* CARD */
+.card-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 23px;
+    height: 100%;
+}
+
+.stat-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
 .stat-value {
-    font-size:clamp(19px,2vw,25px);
-    font-weight:800;
-    overflow-wrap:anywhere;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--dark);
+    word-break: break-word;
 }
-.stat-note {font-size:10px;color:var(--muted);margin-top:9px}
-.panel-title {font-size:14px;font-weight:800}
-.panel-subtitle {font-size:11px;color:var(--muted);margin-top:5px}
-.chart-container {height:270px;position:relative;margin-top:20px}
-.section-heading {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:20px;
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
 }
-.section-heading h3 {font-size:17px;font-weight:800;margin:0}
-.section-heading p {font-size:11px;color:var(--muted);margin:6px 0 0}
-.btn-primary-custom {
-    background:var(--primary);
-    color:white;border:0;
-    padding:11px 17px;
-    border-radius:9px;
-    font-size:12px;font-weight:700;
+
+.blue { background: #edf2ff; color: #315efb; }
+.green { background: #e7f8ef; color: #16a36a; }
+.red { background: #fff0f0; color: #e55353; }
+.orange { background: #fff5e8; color: #ed9b36; }
+
+.small-note {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 12px;
 }
-.btn-primary-custom:hover {background:#1d4ed8;color:white}
-.table-panel {
-    background:white;
-    border:1px solid var(--border);
-    border-radius:15px;
-    overflow:hidden;
+
+.chart-container {
+    height: 280px;
+    position: relative;
 }
-.table-responsive {padding:0 18px 12px}
-.table {margin-bottom:0;white-space:nowrap}
-.table th {
-    font-size:10px;
-    color:#98a2b3;
-    text-transform:uppercase;
-    padding:17px 12px;
-    border-bottom:1px solid var(--border);
+
+/* TABLE */
+.table-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    overflow: hidden;
 }
-.table td {
-    padding:15px 12px;
-    font-size:11px;
-    vertical-align:middle;
-    border-bottom:1px solid #f0f2f6;
+
+.table-header {
+    padding: 21px 23px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
-.table tbody tr:last-child td {border-bottom:0}
-.transaction-name {font-weight:700}
-.transaction-category {font-size:10px;color:var(--muted);margin-top:4px}
-.badge-income,.badge-expense,.badge-transfer {
-    padding:6px 9px;
-    border-radius:20px;
-    font-size:10px;
-    font-weight:700;
+
+.table-header h5 {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
 }
-.badge-income {background:#ecfdf5;color:#059669}
-.badge-expense {background:#fff1f2;color:#e11d48}
-.badge-transfer {background:#eff6ff;color:#2563eb}
-.amount-income {color:#059669;font-weight:800}
-.amount-expense {color:#e11d48;font-weight:800}
-.action-btn {
-    border:0;background:#f4f6fa;color:#7b879b;
-    width:30px;height:30px;border-radius:7px;margin-right:3px;
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
 }
-.action-btn:hover {background:#fee2e2;color:#dc2626}
-.form-control,.form-select {
-    font-size:12px;padding:11px 12px;
-    border-color:var(--border);border-radius:9px;
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
 }
-.form-label {font-size:11px;font-weight:700;margin-bottom:7px}
-.filter-search {max-width:240px}
+
+thead th {
+    color: #98a3b5;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 17px 20px;
+    background: #fff;
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: 17px 20px;
+    border-top: 1px solid #f0f2f7;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background: #fafbff;
+}
+
+.badge-income {
+    background: #e6f8ef;
+    color: #15975f;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge-expense {
+    background: #fff0f0;
+    color: #df5252;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge-account {
+    background: #edf2ff;
+    color: #315efb;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
 .empty-state {
-    text-align:center;padding:35px 15px;
-    color:var(--muted);font-size:12px;
+    text-align: center;
+    padding: 55px 20px;
+    color: var(--muted);
 }
-.empty-state i {display:block;font-size:35px;margin-bottom:12px}
+
+.empty-state i {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 12px;
+    color: #aab4c6;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* BUTTON & FORM */
+.btn-primary-custom {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.btn-primary-custom:hover {
+    background: #234de0;
+    color: white;
+}
+
+.btn-light-custom {
+    background: #f3f5fa;
+    color: #647087;
+    border: none;
+    padding: 9px 13px;
+    border-radius: 9px;
+}
+
+.form-label {
+    color: #59667d;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-control, .form-select {
+    padding: 11px 13px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px #315efb15;
+}
+
+.form-panel {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 25px;
+    border-radius: 17px;
+}
+
+/* TRANSFER PAGE */
+.transfer-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, .85fr);
+    gap: 24px;
+    align-items: start;
+    width: 100%;
+}
+
+.transfer-main,
+.transfer-side {
+    min-width: 0;
+    width: 100%;
+}
+
+.transfer-form-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.transfer-balance-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 24px;
+    margin-bottom: 18px;
+}
+
+.balance-label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.balance-number {
+    font-size: 27px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.transfer-history {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    overflow: hidden;
+}
+
+.transfer-history table {
+    min-width: 620px;
+}
+
+.route-text {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* PROFILE */
 .profile-avatar {
-    width:75px;height:75px;display:grid;place-items:center;
-    border-radius:50%;font-size:27px;font-weight:800;
-    background:#dbeafe;color:var(--primary);margin-bottom:15px;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    margin-bottom: 18px;
 }
-.mobile-menu {
-    display:none;border:0;background:white;
-    font-size:23px;color:var(--dark);
+
+/* REPORT */
+.report-summary {
+    padding: 20px;
+    border-radius: 13px;
+    background: #f8f9fd;
 }
-.modal-content {border:0;border-radius:16px}
-.modal-header,.modal-footer {border-color:var(--border);padding:18px 22px}
-.modal-body {padding:22px}
-.modal-title {font-size:16px;font-weight:800}
-@media(max-width:900px) {
-    .sidebar {transform:translateX(-100%)}
-    .sidebar.show {transform:translateX(0);box-shadow:10px 0 30px #0002}
-    .main {margin-left:0;padding:22px 18px}
-    .mobile-menu {display:block}
+
+/* RESPONSIVE */
+@media(max-width: 1100px) {
+    .main {
+        padding: 25px 22px;
+    }
+
+    .transfer-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .transfer-side {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .transfer-balance-card {
+        margin: 0;
+    }
 }
-@media(max-width:576px) {
-    .main {padding:18px 13px}
-    .page-title {font-size:19px}
-    .user-info {display:none}
-    .section-heading {align-items:flex-start;flex-direction:column}
-    .filter-search {max-width:100%;width:100%}
-    .panel {padding:16px}
+
+@media(max-width: 768px) {
+    .sidebar {
+        width: 72px;
+        padding: 20px 9px;
+    }
+
+    .brand {
+        justify-content: center;
+        padding: 0;
+        margin-bottom: 35px;
+    }
+
+    .brand h4,
+    .menu-title,
+    .nav-item span,
+    .user-mini div:last-child {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding: 13px 5px;
+    }
+
+    .nav-item i {
+        font-size: 21px;
+    }
+
+    .user-mini {
+        justify-content: center;
+        padding: 5px 0;
+    }
+
+    .main {
+        width: calc(100% - 72px);
+        margin-left: 72px;
+        padding: 22px 15px 35px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+    .topbar h2 {
+        font-size: 21px;
+    }
+
+    .date-label {
+        display: none;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .transfer-side {
+        grid-template-columns: 1fr;
+    }
 }
-@media print {
-    .sidebar,.topbar,.btn-primary-custom,.mobile-menu,
-    .action-btn,.section-heading button {display:none!important}
-    .main {margin:0;padding:0}
-    .page {display:none!important}
-    #reports {display:block!important}
-    body {background:white}
+
+@media(max-width: 480px) {
+    .card-box {
+        padding: 17px;
+    }
+
+    .transfer-form-card {
+        padding: 18px;
+    }
+
+    .table-header {
+        padding: 17px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<aside class="sidebar" id="sidebar">
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
     <div class="brand">
         <div class="brand-icon"><i class="bi bi-wallet2"></i></div>
-        FinTrack
+        <h4>Fin<span>Track</span></h4>
     </div>
 
-    <div class="menu-label">MENU UTAMA</div>
+    <div class="menu-title">MENU UTAMA</div>
 
-    <nav>
-        <a class="nav-link-custom active" data-page="dashboard">
-            <i class="bi bi-grid-1x2"></i> Dashboard
-        </a>
-        <a class="nav-link-custom" data-page="transactions">
-            <i class="bi bi-arrow-left-right"></i> Transaksi
-        </a>
-        <a class="nav-link-custom" data-page="transfer">
-            <i class="bi bi-arrow-left-right"></i> Transfer Cash/Bank
-        </a>
-        <a class="nav-link-custom" data-page="reports">
-            <i class="bi bi-bar-chart-line"></i> Laporan
-        </a>
-        <a class="nav-link-custom" data-page="profile">
-            <i class="bi bi-person"></i> Profil & Saldo Awal
-        </a>
+    <nav class="nav-menu">
+        <button class="nav-item active" data-page="dashboard">
+            <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="transactions">
+            <i class="bi bi-arrow-left-right"></i><span>Transaksi</span>
+        </button>
+        <button class="nav-item" data-page="transfer">
+            <i class="bi bi-arrow-down-up"></i><span>Transfer Cash / Bank</span>
+        </button>
+        <button class="nav-item" data-page="reports">
+            <i class="bi bi-bar-chart-line"></i><span>Laporan</span>
+        </button>
+        <button class="nav-item" data-page="profile">
+            <i class="bi bi-person-circle"></i><span>Profil & Saldo Awal</span>
+        </button>
     </nav>
 
     <div class="sidebar-bottom">
-        <div class="menu-label">FINANCIAL MANAGEMENT</div>
-        <div class="small text-secondary px-3">
-            <i class="bi bi-shield-check me-2"></i>FinTrack Version 2.0
+        <div class="user-mini">
+            <div class="avatar" id="sidebarAvatar">U</div>
+            <div>
+                <strong id="sidebarName">Pengguna</strong>
+                <small>Personal Account</small>
+            </div>
         </div>
     </div>
 </aside>
 
+<!-- MAIN CONTENT -->
 <main class="main">
 
-<header class="topbar">
-    <div class="d-flex align-items-center gap-3">
-        <button class="mobile-menu" id="menuToggle">
-            <i class="bi bi-list"></i>
-        </button>
+    <div class="topbar">
         <div>
-            <h1 class="page-title" id="pageTitle">Dashboard</h1>
-            <div class="page-subtitle" id="pageSubtitle">
-                Selamat datang di FinTrack.
+            <h2 id="pageTitle">Dashboard</h2>
+            <p id="pageSubtitle">Selamat datang di pengelolaan keuanganmu.</p>
+        </div>
+        <div class="topbar-right">
+            <div class="date-label">
+                <i class="bi bi-calendar3 me-2"></i>
+                <span id="todayDate"></span>
             </div>
         </div>
     </div>
-    <div class="user-profile">
-        <div class="avatar" id="topAvatar">U</div>
-        <div class="user-info">
-            <div class="user-name" id="topName">Pengguna</div>
-            <div class="user-role">Personal Account</div>
-        </div>
-    </div>
-</header>
 
-<!-- DASHBOARD -->
-<section class="page active" id="dashboard">
+    <!-- DASHBOARD -->
+    <section class="page active" id="dashboard">
 
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-top">
-                    <span class="stat-label">Total Saldo</span>
-                    <div class="stat-icon blue"><i class="bi bi-wallet2"></i></div>
+        <div class="row g-3 mb-4">
+            <div class="col-xl-4 col-md-6">
+                <div class="card-box">
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-label">Total Saldo</div>
+                            <div class="stat-value" id="totalBalance">Rp 0</div>
+                        </div>
+                        <div class="stat-icon blue"><i class="bi bi-wallet2"></i></div>
+                    </div>
+                    <div class="small-note">Gabungan saldo Cash dan Bank</div>
                 </div>
-                <div class="stat-value" id="balanceValue">Rp0</div>
-                <div class="stat-note">Total uang Cash dan Bank</div>
             </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-top">
-                    <span class="stat-label">Pemasukan</span>
-                    <div class="stat-icon green"><i class="bi bi-arrow-down-left"></i></div>
+            <div class="col-xl-4 col-md-6">
+                <div class="card-box">
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-label">Total Pemasukan</div>
+                            <div class="stat-value text-success" id="totalIncome">Rp 0</div>
+                        </div>
+                        <div class="stat-icon green"><i class="bi bi-arrow-down-circle"></i></div>
+                    </div>
+                    <div class="small-note">Akumulasi seluruh pemasukan</div>
                 </div>
-                <div class="stat-value" id="incomeValue">Rp0</div>
-                <div class="stat-note">Total pemasukan</div>
             </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-top">
-                    <span class="stat-label">Pengeluaran</span>
-                    <div class="stat-icon red"><i class="bi bi-arrow-up-right"></i></div>
+            <div class="col-xl-4 col-md-6">
+                <div class="card-box">
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-label">Total Pengeluaran</div>
+                            <div class="stat-value text-danger" id="totalExpense">Rp 0</div>
+                        </div>
+                        <div class="stat-icon red"><i class="bi bi-arrow-up-circle"></i></div>
+                    </div>
+                    <div class="small-note">Akumulasi seluruh pengeluaran</div>
                 </div>
-                <div class="stat-value" id="expenseValue">Rp0</div>
-                <div class="stat-note">Total pengeluaran</div>
             </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-top">
-                    <span class="stat-label">Jumlah Transaksi</span>
-                    <div class="stat-icon purple"><i class="bi bi-receipt"></i></div>
+            <div class="col-xl-6 col-md-6">
+                <div class="card-box">
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-label">Saldo Cash</div>
+                            <div class="stat-value" id="cashBalance">Rp 0</div>
+                        </div>
+                        <div class="stat-icon orange"><i class="bi bi-cash-stack"></i></div>
+                    </div>
+                    <div class="small-note">Uang tunai yang tersedia</div>
                 </div>
-                <div class="stat-value" id="transactionCount">0</div>
-                <div class="stat-note">Transaksi tercatat</div>
             </div>
-        </div>
-    </div>
 
-    <!-- CASH DAN BANK -->
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-md-6">
-            <div class="stat-card">
-                <div class="stat-top">
-                    <span class="stat-label">Sisa Uang Cash</span>
-                    <div class="stat-icon blue"><i class="bi bi-wallet2"></i></div>
+            <div class="col-xl-6 col-md-6">
+                <div class="card-box">
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-label">Saldo Bank</div>
+                            <div class="stat-value" id="bankBalance">Rp 0</div>
+                        </div>
+                        <div class="stat-icon blue"><i class="bi bi-bank"></i></div>
+                    </div>
+                    <div class="small-note">Saldo yang tersimpan di rekening</div>
                 </div>
-                <div class="stat-value" id="cashBalanceValue">Rp0</div>
-                <div class="stat-note">Uang tunai yang tersedia</div>
             </div>
         </div>
 
-        <div class="col-12 col-md-6">
-            <div class="stat-card">
-                <div class="stat-top">
-                    <span class="stat-label">Sisa Uang Bank</span>
-                    <div class="stat-icon green"><i class="bi bi-bank"></i></div>
+        <div class="row g-3 mb-4">
+            <div class="col-lg-8">
+                <div class="card-box">
+                    <h5 class="section-title">Grafik Keuangan</h5>
+                    <div class="chart-container">
+                        <canvas id="financeChart"></canvas>
+                    </div>
                 </div>
-                <div class="stat-value" id="bankBalanceValue">Rp0</div>
-                <div class="stat-note">Saldo rekening yang tersedia</div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card-box">
+                    <h5 class="section-title">Komposisi Saldo</h5>
+                    <div class="chart-container">
+                        <canvas id="accountChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-xl-8">
-            <div class="panel">
-                <div class="panel-title">Grafik Keuangan</div>
-                <div class="panel-subtitle">Pemasukan dan pengeluaran 6 bulan terakhir</div>
-                <div class="chart-container"><canvas id="financeChart"></canvas></div>
+        <div class="table-card">
+            <div class="table-header">
+                <h5>Transaksi Terbaru</h5>
+                <button class="btn-light-custom" onclick="showPage('transactions')">Lihat Semua</button>
             </div>
+            <div id="recentTransactions"></div>
         </div>
-        <div class="col-12 col-xl-4">
-            <div class="panel">
-                <div class="panel-title">Komposisi Keuangan</div>
-                <div class="panel-subtitle">Perbandingan pemasukan dan pengeluaran</div>
-                <div class="chart-container"><canvas id="compositionChart"></canvas></div>
-            </div>
-        </div>
-    </div>
+    </section>
 
-    <div class="section-heading">
-        <div>
-            <h3>Transaksi Terbaru</h3>
-            <p>Aktivitas keuangan terakhir.</p>
-        </div>
-        <button class="btn-primary-custom" onclick="showPage('transactions')">
-            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
-        </button>
-    </div>
+    <!-- TRANSACTIONS -->
+    <section class="page" id="transactions">
 
-    <div class="table-panel">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr><th>Deskripsi</th><th>Tanggal</th><th>Tipe</th><th>Sumber</th><th>Jumlah</th></tr>
-                </thead>
-                <tbody id="recentTable"></tbody>
-            </table>
-        </div>
-    </div>
-</section>
+        <div class="form-panel mb-4">
+            <h5 class="section-title">Tambah Transaksi</h5>
 
-<!-- TRANSAKSI -->
-<section class="page" id="transactions">
-    <div class="section-heading">
-        <div>
-            <h3>Kelola Transaksi</h3>
-            <p>Catat pemasukan dan pengeluaran kamu.</p>
-        </div>
-        <button class="btn-primary-custom" onclick="openTransactionModal()">
-            <i class="bi bi-plus-lg me-1"></i> Tambah Transaksi
-        </button>
-    </div>
+            <form id="transactionForm">
+                <input type="hidden" id="editId">
 
-    <div class="table-panel">
-        <div class="p-3 d-flex flex-wrap gap-2 justify-content-between">
-            <input type="search" class="form-control filter-search"
-                id="searchTransaction" placeholder="Cari transaksi...">
-
-            <select class="form-select" id="filterType" style="max-width:170px">
-                <option value="all">Semua Tipe</option>
-                <option value="income">Pemasukan</option>
-                <option value="expense">Pengeluaran</option>
-            </select>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Deskripsi</th><th>Kategori</th><th>Tanggal</th>
-                        <th>Tipe</th><th>Sumber</th><th>Jumlah</th><th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionTable"></tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
-<!-- TRANSFER -->
-<section class="page" id="transfer">
-    <div class="section-heading">
-        <div>
-            <h3>Transfer Uang</h3>
-            <p>Pindahkan uang antara Cash dan Bank tanpa mengubah total saldo.</p>
-        </div>
-    </div>
-
-    <div class="row g-3">
-        <div class="col-12 col-lg-7">
-            <div class="panel">
-                <div class="panel-title mb-4">Formulir Transfer</div>
-
-                <form id="transferForm">
-                    <div class="mb-3">
-                        <label class="form-label">Dari Sumber Dana</label>
-                        <select class="form-select" id="transferFrom" required>
-                            <option value="cash">Cash (Tunai)</option>
-                            <option value="bank">Bank (Rekening)</option>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Jenis Transaksi</label>
+                        <select class="form-select" id="type" required>
+                            <option value="income">Pemasukan</option>
+                            <option value="expense">Pengeluaran</option>
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Ke Sumber Dana</label>
-                        <select class="form-select" id="transferTo" required>
-                            <option value="bank">Bank (Rekening)</option>
-                            <option value="cash">Cash (Tunai)</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Jumlah Transfer (Rp)</label>
-                        <input type="number" class="form-control" id="transferAmount"
-                            min="1" step="1" placeholder="Contoh: 500000" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Tanggal Transfer</label>
-                        <input type="date" class="form-control" id="transferDate" required>
-                    </div>
-
-                    <div class="mb-3">
+                    <div class="col-md-4">
                         <label class="form-label">Keterangan</label>
-                        <input type="text" class="form-control" id="transferDescription"
-                            maxlength="100" placeholder="Contoh: Setor uang tunai">
+                        <input type="text" class="form-control" id="description" placeholder="Contoh: Gaji bulanan" required>
                     </div>
 
-                    <button type="submit" class="btn-primary-custom">
-                        <i class="bi bi-arrow-left-right me-1"></i> Proses Transfer
+                    <div class="col-md-4">
+                        <label class="form-label">Kategori</label>
+                        <select class="form-select" id="category" required>
+                            <option value="Gaji">Gaji</option>
+                            <option value="Bisnis">Bisnis</option>
+                            <option value="Makanan">Makanan</option>
+                            <option value="Transportasi">Transportasi</option>
+                            <option value="Belanja">Belanja</option>
+                            <option value="Pendidikan">Pendidikan</option>
+                            <option value="Tagihan">Tagihan</option>
+                            <option value="Hiburan">Hiburan</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Jumlah (Rp)</label>
+                        <input type="number" class="form-control" id="amount" min="1" placeholder="Contoh: 100000" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Sumber Dana</label>
+                        <select class="form-select" id="account">
+                            <option value="cash">Cash</option>
+                            <option value="bank">Bank</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" id="transactionDate" required>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn-primary-custom" id="saveTransaction">
+                            <i class="bi bi-plus-circle me-1"></i> Simpan Transaksi
+                        </button>
+                        <button type="button" class="btn-light-custom" onclick="resetTransactionForm()">Batal</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-card">
+            <div class="table-header">
+                <h5>Daftar Transaksi</h5>
+                <input type="search" id="searchTransaction" class="form-control" style="max-width:250px" placeholder="Cari transaksi...">
+            </div>
+            <div id="transactionTable"></div>
+        </div>
+    </section>
+
+    <!-- TRANSFER -->
+    <section class="page" id="transfer">
+
+        <div class="transfer-layout">
+
+            <div class="transfer-main">
+
+                <div class="transfer-form-card">
+                    <h5 class="section-title">Transfer Antar Saldo</h5>
+                    <p class="text-secondary small mb-4">Pindahkan uang dari Cash ke Bank atau sebaliknya.</p>
+
+                    <form id="transferForm">
+                        <div class="mb-3">
+                            <label class="form-label">Keterangan Transfer</label>
+                            <input type="text" class="form-control" id="transferDescription" placeholder="Contoh: Setor uang ke rekening" required>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Dari</label>
+                                <select class="form-select" id="transferFrom">
+                                    <option value="cash">Cash</option>
+                                    <option value="bank">Bank</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Ke</label>
+                                <select class="form-select" id="transferTo">
+                                    <option value="bank">Bank</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Jumlah Transfer (Rp)</label>
+                                <input type="number" class="form-control" id="transferAmount" min="1" placeholder="Masukkan jumlah" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" id="transferDate" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary-custom mt-4">
+                            <i class="bi bi-arrow-left-right me-2"></i>Proses Transfer
+                        </button>
+                    </form>
+                </div>
+
+                <h5 class="section-title">Riwayat Transfer</h5>
+
+                <div class="transfer-history">
+                    <div id="transferTable"></div>
+                </div>
+            </div>
+
+            <div class="transfer-side">
+                <div class="transfer-balance-card">
+                    <div class="balance-label">Saldo Cash Saat Ini</div>
+                    <div class="balance-number" id="transferCashBalance">Rp 0</div>
+                    <div class="small-note">Uang tunai tersedia</div>
+                </div>
+
+                <div class="transfer-balance-card">
+                    <div class="balance-label">Saldo Bank Saat Ini</div>
+                    <div class="balance-number" id="transferBankBalance">Rp 0</div>
+                    <div class="small-note">Saldo rekening tersedia</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="page" id="reports">
+
+        <div class="form-panel mb-4">
+            <div class="row align-items-end g-3">
+                <div class="col-md-5">
+                    <label class="form-label">Pilih Bulan Laporan</label>
+                    <input type="month" class="form-control" id="reportMonth">
+                </div>
+                <div class="col-md-3">
+                    <button class="btn-primary-custom w-100" onclick="renderReports()">
+                        <i class="bi bi-search me-1"></i> Tampilkan
                     </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-5">
-            <div class="stat-card mb-3">
-                <div class="stat-label mb-2">Saldo Cash Saat Ini</div>
-                <div class="stat-value" id="transferCashBalance">Rp0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label mb-2">Saldo Bank Saat Ini</div>
-                <div class="stat-value" id="transferBankBalance">Rp0</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section-heading mt-4">
-        <div><h3>Riwayat Transfer</h3></div>
-    </div>
-
-    <div class="table-panel">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr><th>Keterangan</th><th>Tanggal</th><th>Rute</th><th>Jumlah</th><th>Aksi</th></tr>
-                </thead>
-                <tbody id="transferTable"></tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
-<!-- LAPORAN -->
-<section class="page" id="reports">
-    <div class="section-heading">
-        <div>
-            <h3>Laporan Keuangan</h3>
-            <p>Ringkasan keuangan berdasarkan bulan.</p>
-        </div>
-        <button class="btn-primary-custom" onclick="window.print()">
-            <i class="bi bi-printer me-1"></i> Cetak Laporan
-        </button>
-    </div>
-
-    <div class="panel mb-4">
-        <label class="form-label">Pilih Bulan Laporan</label>
-        <div class="d-flex flex-wrap gap-2">
-            <input type="month" class="form-control" id="reportMonth" style="max-width:220px">
-            <button class="btn-primary-custom" onclick="renderReports()">Tampilkan</button>
-        </div>
-    </div>
-
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-md-4">
-            <div class="stat-card">
-                <div class="stat-label mb-3">Total Pemasukan</div>
-                <div class="stat-value text-success" id="reportIncome">Rp0</div>
-            </div>
-        </div>
-        <div class="col-12 col-md-4">
-            <div class="stat-card">
-                <div class="stat-label mb-3">Total Pengeluaran</div>
-                <div class="stat-value text-danger" id="reportExpense">Rp0</div>
-            </div>
-        </div>
-        <div class="col-12 col-md-4">
-            <div class="stat-card">
-                <div class="stat-label mb-3">Selisih</div>
-                <div class="stat-value" id="reportBalance">Rp0</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="table-panel">
-        <div class="p-3"><div class="panel-title">Detail Laporan Bulanan</div></div>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr><th>Deskripsi</th><th>Kategori</th><th>Tanggal</th><th>Tipe</th><th>Sumber</th><th>Jumlah</th></tr>
-                </thead>
-                <tbody id="reportTable"></tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
-<!-- PROFIL -->
-<section class="page" id="profile">
-    <div class="section-heading">
-        <div>
-            <h3>Profil dan Saldo Awal</h3>
-            <p>Atur identitas dan saldo awal Cash maupun Bank.</p>
-        </div>
-    </div>
-
-    <div class="profile-card" style="max-width:650px">
-        <div class="profile-avatar" id="profileAvatar">U</div>
-
-        <form id="profileForm">
-            <div class="mb-3">
-                <label class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="profileName"
-                    maxlength="60" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" id="profileEmail"
-                    maxlength="100" placeholder="nama@email.com">
-            </div>
-
-            <hr>
-
-            <div class="panel-title mb-3">Saldo Awal</div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Saldo Awal Cash (Rp)</label>
-                    <input type="number" class="form-control"
-                        id="cashOpeningBalance" min="0" step="1" required>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Saldo Awal Bank (Rp)</label>
-                    <input type="number" class="form-control"
-                        id="bankOpeningBalance" min="0" step="1" required>
+                <div class="col-md-4">
+                    <button class="btn-light-custom w-100" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i> Cetak Laporan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card-box">
+                    <div class="stat-label">Pemasukan Bulan Ini</div>
+                    <div class="stat-value text-success" id="reportIncome">Rp 0</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-box">
+                    <div class="stat-label">Pengeluaran Bulan Ini</div>
+                    <div class="stat-value text-danger" id="reportExpense">Rp 0</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-box">
+                    <div class="stat-label">Selisih</div>
+                    <div class="stat-value" id="reportDifference">Rp 0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-header">
+                <h5>Rincian Laporan</h5>
+            </div>
+            <div id="reportTable"></div>
+        </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="page" id="profile">
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card-box text-center">
+                    <div class="profile-avatar mx-auto"><i class="bi bi-person"></i></div>
+                    <h5 class="fw-bold" id="profileDisplayName">Pengguna</h5>
+                    <p class="text-secondary small">Akun Personal FinTrack</p>
+                    <hr>
+                    <p class="small text-secondary mb-0">Kelola profil dan saldo awal keuanganmu melalui halaman ini.</p>
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary-custom">
-                <i class="bi bi-check-lg me-1"></i> Simpan Profil dan Saldo
-            </button>
-        </form>
+            <div class="col-lg-8">
+                <div class="form-panel mb-4">
+                    <h5 class="section-title">Informasi Profil</h5>
 
-        <hr class="my-4">
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="profileName" placeholder="Nama kamu" required>
+                        </div>
 
-        <div class="fw-bold small mb-2">Backup dan Pengelolaan Data</div>
-        <p class="text-secondary" style="font-size:11px">
-            Unduh salinan data transaksi dan transfer untuk cadangan.
-        </p>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="profileEmail" placeholder="nama@email.com">
+                        </div>
 
-        <button class="btn btn-outline-primary btn-sm" onclick="exportData()">
-            <i class="bi bi-download me-1"></i> Backup Data
-        </button>
+                        <button type="submit" class="btn-primary-custom">Simpan Profil</button>
+                    </form>
+                </div>
 
-        <button class="btn btn-outline-danger btn-sm ms-2"
-            onclick="clearAllTransactions()">
-            <i class="bi bi-trash me-1"></i> Hapus Semua Data Aktivitas
-        </button>
-    </div>
-</section>
+                <div class="form-panel">
+                    <h5 class="section-title">Pengaturan Saldo Awal</h5>
+                    <p class="text-secondary small">Masukkan saldo yang kamu miliki sebelum mulai menggunakan FinTrack.</p>
+
+                    <form id="openingBalanceForm">
+                        <div class="mb-3">
+                            <label class="form-label">Saldo Awal Cash (Rp)</label>
+                            <input type="number" class="form-control" id="openingCash" min="0" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Saldo Awal Bank (Rp)</label>
+                            <input type="number" class="form-control" id="openingBank" min="0" required>
+                        </div>
+
+                        <button type="submit" class="btn-primary-custom">Simpan Saldo Awal</button>
+                    </form>
+                </div>
+
+                <div class="form-panel mt-4">
+                    <h5 class="section-title">Cadangan Data</h5>
+                    <p class="text-secondary small">Unduh salinan data keuanganmu agar bisa disimpan sebagai cadangan.</p>
+                    <button class="btn-primary-custom" onclick="exportData()">
+                        <i class="bi bi-download me-2"></i>Unduh Backup Data
+                    </button>
+                    <button class="btn-light-custom ms-2" onclick="clearAllData()">
+                        <i class="bi bi-trash me-1"></i>Hapus Semua Aktivitas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
 </main>
-
-<!-- MODAL TRANSAKSI -->
-<div class="modal fade" id="transactionModal" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="modalTitle">Tambah Transaksi</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-    </div>
-
-    <form id="transactionForm">
-        <div class="modal-body">
-            <input type="hidden" id="transactionId">
-
-            <div class="mb-3">
-                <label class="form-label">Deskripsi</label>
-                <input type="text" class="form-control" id="description"
-                    maxlength="100" placeholder="Contoh: Gaji bulanan" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Jenis Transaksi</label>
-                <select class="form-select" id="type" required>
-                    <option value="income">Pemasukan</option>
-                    <option value="expense">Pengeluaran</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Sumber Dana</label>
-                <select class="form-select" id="account" required>
-                    <option value="cash">Cash (Tunai)</option>
-                    <option value="bank">Bank (Rekening)</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Kategori</label>
-                <select class="form-select" id="category" required>
-                    <option value="Gaji">Gaji</option>
-                    <option value="Bisnis">Bisnis</option>
-                    <option value="Penjualan">Penjualan</option>
-                    <option value="Makanan">Makanan</option>
-                    <option value="Transportasi">Transportasi</option>
-                    <option value="Belanja">Belanja</option>
-                    <option value="Tagihan">Tagihan</option>
-                    <option value="Pendidikan">Pendidikan</option>
-                    <option value="Lainnya">Lainnya</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Jumlah Uang (Rp)</label>
-                <input type="number" class="form-control" id="amount"
-                    min="1" step="1" placeholder="Contoh: 500000" required>
-            </div>
-
-            <div class="mb-2">
-                <label class="form-label">Tanggal</label>
-                <input type="date" class="form-control" id="date" required>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Batal</button>
-            <button type="submit" class="btn-primary-custom">Simpan Transaksi</button>
-        </div>
-    </form>
 </div>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// ========================================
-// 1. PENYIMPANAN DATA
-// ========================================
+/* =========================================
+   PENYIMPANAN DATA
+========================================= */
 
-const STORAGE_KEY = "fintrack_data";
-const PROFILE_KEY = "fintrack_profile";
-const TRANSFER_KEY = "fintrack_transfers";
+const STORAGE_TRANSACTIONS = "fintrack_data";
+const STORAGE_PROFILE = "fintrack_profile";
+const STORAGE_TRANSFERS = "fintrack_transfers";
 
-function loadArray(key) {
-    try {
-        const data = JSON.parse(localStorage.getItem(key) || "[]");
-        return Array.isArray(data) ? data : [];
-    } catch {
-        return [];
-    }
-}
+let transactions = JSON.parse(localStorage.getItem(STORAGE_TRANSACTIONS) || "[]");
+let transfers = JSON.parse(localStorage.getItem(STORAGE_TRANSFERS) || "[]");
 
-function saveArray(key, data) {
-    try {
-        localStorage.setItem(key, JSON.stringify(data));
-        return true;
-    } catch {
-        alert("Data gagal disimpan. Penyimpanan browser mungkin penuh.");
-        return false;
-    }
-}
-
-function loadProfile() {
-    try {
-        const data = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null");
-        return {
-            name: typeof data?.name === "string" ? data.name : "Pengguna",
-            email: typeof data?.email === "string" ? data.email : "",
-            cashOpeningBalance: Number(data?.cashOpeningBalance) || 0,
-            bankOpeningBalance: Number(data?.bankOpeningBalance) || 0
-        };
-    } catch {
-        return {
-            name: "Pengguna",
-            email: "",
-            cashOpeningBalance: 0,
-            bankOpeningBalance: 0
-        };
-    }
-}
-
-let transactions = loadArray(STORAGE_KEY);
-let transfers = loadArray(TRANSFER_KEY);
-let profile = loadProfile();
+let profile = JSON.parse(localStorage.getItem(STORAGE_PROFILE) || "null") || {
+    name: "Pengguna FinTrack",
+    email: "",
+    openingCash: 0,
+    openingBank: 0
+};
 
 let financeChart = null;
-let compositionChart = null;
+let accountChart = null;
 
-const transactionModal = new bootstrap.Modal(
-    document.getElementById("transactionModal")
-);
+const rupiah = number => new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+}).format(Number(number) || 0);
 
-function createId() {
-    return typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : Date.now().toString() + Math.random().toString(16).slice(2);
-}
+const today = new Date().toISOString().slice(0, 10);
 
-function formatRupiah(value) {
-    return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        maximumFractionDigits: 0
-    }).format(value || 0);
-}
-
-function formatDate(date) {
-    if (!date) return "-";
-    const parts = date.split("-");
-    if (parts.length !== 3) return date;
-
-    return new Date(
-        Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])
-    ).toLocaleDateString("id-ID", {
-        day: "2-digit", month: "short", year: "numeric"
+document.getElementById("todayDate").textContent =
+    new Date().toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
     });
-}
 
-function getToday() {
-    const now = new Date();
-    return [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, "0"),
-        String(now.getDate()).padStart(2, "0")
-    ].join("-");
+document.getElementById("transactionDate").value = today;
+document.getElementById("transferDate").value = today;
+document.getElementById("reportMonth").value = today.slice(0, 7);
+
+function saveData() {
+    localStorage.setItem(STORAGE_TRANSACTIONS, JSON.stringify(transactions));
+    localStorage.setItem(STORAGE_TRANSFERS, JSON.stringify(transfers));
+    localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile));
 }
 
 function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -840,550 +1096,508 @@ function escapeHTML(value) {
     })[char]);
 }
 
-// ========================================
-// 2. NAVIGASI
-// ========================================
-
-const pageInfo = {
-    dashboard: ["Dashboard", "Selamat datang di sistem keuangan FinTrack."],
-    transactions: ["Transaksi", "Kelola pemasukan dan pengeluaran kamu."],
-    transfer: ["Transfer Cash/Bank", "Pindahkan uang antar sumber dana."],
-    reports: ["Laporan Keuangan", "Pantau kondisi keuangan secara berkala."],
-    profile: ["Profil & Saldo Awal", "Atur identitas dan saldo awal."]
-};
-
-function showPage(name) {
-    document.querySelectorAll(".page").forEach(page =>
-        page.classList.remove("active")
-    );
-
-    document.getElementById(name).classList.add("active");
-
-    document.querySelectorAll(".nav-link-custom").forEach(link =>
-        link.classList.toggle("active", link.dataset.page === name)
-    );
-
-    document.getElementById("pageTitle").textContent = pageInfo[name][0];
-    document.getElementById("pageSubtitle").textContent = pageInfo[name][1];
-
-    document.getElementById("sidebar").classList.remove("show");
-
-    if (name === "dashboard") renderDashboard();
-    if (name === "transactions") renderTransactions();
-    if (name === "transfer") renderTransfers();
-    if (name === "reports") renderReports();
-    if (name === "profile") renderProfile();
-}
-
-document.querySelectorAll(".nav-link-custom").forEach(link => {
-    link.addEventListener("click", () => showPage(link.dataset.page));
-});
-
-document.getElementById("menuToggle").addEventListener("click", () => {
-    document.getElementById("sidebar").classList.toggle("show");
-});
-
-// ========================================
-// 3. PERHITUNGAN SALDO
-// ========================================
-
-function calculateFinance(data = transactions) {
-    const income = data
-        .filter(item => item.type === "income")
-        .reduce((sum, item) => sum + Number(item.amount), 0);
-
-    const expense = data
-        .filter(item => item.type === "expense")
-        .reduce((sum, item) => sum + Number(item.amount), 0);
-
-    const cashIncome = data
-        .filter(item => item.type === "income" && (item.account || "cash") === "cash")
-        .reduce((sum, item) => sum + Number(item.amount), 0);
-
-    const cashExpense = data
-        .filter(item => item.type === "expense" && (item.account || "cash") === "cash")
-        .reduce((sum, item) => sum + Number(item.amount), 0);
-
-    const bankIncome = data
-        .filter(item => item.type === "income" && item.account === "bank")
-        .reduce((sum, item) => sum + Number(item.amount), 0);
-
-    const bankExpense = data
-        .filter(item => item.type === "expense" && item.account === "bank")
-        .reduce((sum, item) => sum + Number(item.amount), 0);
-
-    const cashBalance =
-        profile.cashOpeningBalance + cashIncome - cashExpense;
-
-    const bankBalance =
-        profile.bankOpeningBalance + bankIncome - bankExpense;
-
-    return {
-        income,
-        expense,
-        cashBalance,
-        bankBalance,
-        balance: cashBalance + bankBalance,
-        count: data.length
-    };
-}
-
-// ========================================
-// 4. DASHBOARD
-// ========================================
-
-function renderDashboard() {
-    const result = calculateFinance();
-
-    document.getElementById("balanceValue").textContent =
-        formatRupiah(result.balance);
-
-    document.getElementById("incomeValue").textContent =
-        formatRupiah(result.income);
-
-    document.getElementById("expenseValue").textContent =
-        formatRupiah(result.expense);
-
-    document.getElementById("transactionCount").textContent =
-        result.count;
-
-    document.getElementById("cashBalanceValue").textContent =
-        formatRupiah(result.cashBalance);
-
-    document.getElementById("bankBalanceValue").textContent =
-        formatRupiah(result.bankBalance);
-
-    document.getElementById("transferCashBalance").textContent =
-        formatRupiah(result.cashBalance);
-
-    document.getElementById("transferBankBalance").textContent =
-        formatRupiah(result.bankBalance);
-
-    renderRecentTransactions();
-    renderCharts();
-}
-
 function accountName(account) {
     return account === "bank" ? "Bank" : "Cash";
 }
 
-function renderRecentTransactions() {
-    const tbody = document.getElementById("recentTable");
+/* =========================================
+   PERHITUNGAN SALDO
+========================================= */
+
+function calculateFinance() {
+    let cash = Number(profile.openingCash) || 0;
+    let bank = Number(profile.openingBank) || 0;
+
+    let income = 0;
+    let expense = 0;
+
+    transactions.forEach(item => {
+        const amount = Number(item.amount) || 0;
+        const account = item.account || "cash";
+
+        if (item.type === "income") {
+            income += amount;
+            if (account === "bank") bank += amount;
+            else cash += amount;
+        } else {
+            expense += amount;
+            if (account === "bank") bank -= amount;
+            else cash -= amount;
+        }
+    });
+
+    transfers.forEach(item => {
+        const amount = Number(item.amount) || 0;
+        if (item.from === "cash") cash -= amount;
+        if (item.from === "bank") bank -= amount;
+        if (item.to === "cash") cash += amount;
+        if (item.to === "bank") bank += amount;
+    });
+
+    return {
+        cash,
+        bank,
+        total: cash + bank,
+        income,
+        expense,
+        count: transactions.length
+    };
+}
+
+/* =========================================
+   NAVIGASI HALAMAN
+========================================= */
+
+const pageInformation = {
+    dashboard: ["Dashboard", "Selamat datang di pengelolaan keuanganmu."],
+    transactions: ["Transaksi", "Catat seluruh pemasukan dan pengeluaranmu."],
+    transfer: ["Transfer Cash / Bank", "Kelola pemindahan uang antar saldo."],
+    reports: ["Laporan Keuangan", "Pantau kondisi keuangan berdasarkan periode."],
+    profile: ["Profil & Saldo Awal", "Atur informasi akun dan saldo awal."]
+};
+
+function showPage(page) {
+    document.querySelectorAll(".page").forEach(element => {
+        element.classList.remove("active");
+    });
+
+    document.querySelectorAll(".nav-item").forEach(element => {
+        element.classList.remove("active");
+    });
+
+    document.getElementById(page).classList.add("active");
+
+    const nav = document.querySelector(`[data-page="${page}"]`);
+    if (nav) nav.classList.add("active");
+
+    document.getElementById("pageTitle").textContent = pageInformation[page][0];
+    document.getElementById("pageSubtitle").textContent = pageInformation[page][1];
+
+    renderAll();
+}
+
+document.querySelectorAll(".nav-item").forEach(button => {
+    button.addEventListener("click", () => {
+        showPage(button.dataset.page);
+    });
+});
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+function renderDashboard() {
+    const data = calculateFinance();
+
+    document.getElementById("totalBalance").textContent = rupiah(data.total);
+    document.getElementById("totalIncome").textContent = rupiah(data.income);
+    document.getElementById("totalExpense").textContent = rupiah(data.expense);
+    document.getElementById("cashBalance").textContent = rupiah(data.cash);
+    document.getElementById("bankBalance").textContent = rupiah(data.bank);
 
     const recent = [...transactions]
         .sort((a, b) => b.date.localeCompare(a.date))
         .slice(0, 5);
 
-    if (!recent.length) {
-        tbody.innerHTML = `
-            <tr><td colspan="5">
-                <div class="empty-state">
-                    <i class="bi bi-receipt"></i>Belum ada transaksi.
-                </div>
-            </td></tr>`;
-        return;
+    let html = "";
+
+    if (recent.length === 0) {
+        html = `<div class="empty-state">
+            <i class="bi bi-receipt"></i>
+            <p>Belum ada transaksi. Mulai catat keuanganmu.</p>
+        </div>`;
+    } else {
+        html = `<div class="table-responsive"><table>
+            <thead><tr>
+                <th>Keterangan</th>
+                <th>Kategori</th>
+                <th>Tanggal</th>
+                <th>Akun</th>
+                <th>Jumlah</th>
+            </tr></thead><tbody>`;
+
+        recent.forEach(item => {
+            html += `<tr>
+                <td class="fw-semibold">${escapeHTML(item.description)}</td>
+                <td>${escapeHTML(item.category)}</td>
+                <td>${escapeHTML(item.date)}</td>
+                <td><span class="badge-account">${accountName(item.account || "cash")}</span></td>
+                <td class="${item.type === "income" ? "text-success" : "text-danger"} fw-bold">
+                    ${item.type === "income" ? "+" : "-"} ${rupiah(item.amount)}
+                </td>
+            </tr>`;
+        });
+
+        html += "</tbody></table></div>";
     }
 
-    tbody.innerHTML = recent.map(item => `
-        <tr>
-            <td>
-                <div class="transaction-name">${escapeHTML(item.description)}</div>
-                <div class="transaction-category">${escapeHTML(item.category)}</div>
-            </td>
-            <td>${formatDate(item.date)}</td>
-            <td>${item.type === "income" ? '<span class="badge-income">Pemasukan</span>' : '<span class="badge-expense">Pengeluaran</span>'}</td>
-            <td>${accountName(item.account || "cash")}</td>
-            <td class="${item.type === "income" ? "amount-income" : "amount-expense"}">
-                ${item.type === "income" ? "+" : "-"} ${formatRupiah(item.amount)}
-            </td>
-        </tr>
-    `).join("");
+    document.getElementById("recentTransactions").innerHTML = html;
+
+    renderCharts(data);
 }
 
-// ========================================
-// 5. GRAFIK
-// ========================================
-
-function renderCharts() {
+function renderCharts(data) {
     if (typeof Chart === "undefined") return;
 
-    const labels = [];
-    const incomeData = [];
-    const expenseData = [];
+    const months = [];
+    const incomes = [];
+    const expenses = [];
 
     for (let i = 5; i >= 0; i--) {
         const date = new Date();
         date.setDate(1);
         date.setMonth(date.getMonth() - i);
 
-        const key = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+        const key = date.toISOString().slice(0, 7);
 
-        labels.push(date.toLocaleDateString("id-ID", {month:"short"}));
+        months.push(date.toLocaleDateString("id-ID", { month: "short" }));
 
-        const data = transactions.filter(item => item.date.startsWith(key));
+        const monthItems = transactions.filter(item => item.date.startsWith(key));
 
-        incomeData.push(data
+        incomes.push(monthItems
             .filter(item => item.type === "income")
-            .reduce((sum,item) => sum + Number(item.amount),0));
+            .reduce((sum, item) => sum + Number(item.amount), 0));
 
-        expenseData.push(data
+        expenses.push(monthItems
             .filter(item => item.type === "expense")
-            .reduce((sum,item) => sum + Number(item.amount),0));
+            .reduce((sum, item) => sum + Number(item.amount), 0));
     }
+
+    const financeCanvas = document.getElementById("financeChart");
 
     if (financeChart) financeChart.destroy();
 
-    financeChart = new Chart(document.getElementById("financeChart"), {
-        type:"bar",
-        data:{
-            labels,
-            datasets:[
-                {label:"Pemasukan",data:incomeData,backgroundColor:"#2563eb",borderRadius:5},
-                {label:"Pengeluaran",data:expenseData,backgroundColor:"#f87171",borderRadius:5}
+    financeChart = new Chart(financeCanvas, {
+        type: "bar",
+        data: {
+            labels: months,
+            datasets: [
+                {
+                    label: "Pemasukan",
+                    data: incomes,
+                    backgroundColor: "#315efb",
+                    borderRadius: 6
+                },
+                {
+                    label: "Pengeluaran",
+                    data: expenses,
+                    backgroundColor: "#f16b6b",
+                    borderRadius: 6
+                }
             ]
         },
-        options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            plugins:{legend:{position:"bottom"}},
-            scales:{
-                y:{beginAtZero:true,ticks:{callback:value=>"Rp"+new Intl.NumberFormat("id-ID",{notation:"compact"}).format(value)}},
-                x:{grid:{display:false}}
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: "bottom" }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => "Rp " + Number(value).toLocaleString("id-ID")
+                    }
+                }
             }
         }
     });
 
-    const result = calculateFinance();
+    if (accountChart) accountChart.destroy();
 
-    if (compositionChart) compositionChart.destroy();
-
-    compositionChart = new Chart(document.getElementById("compositionChart"), {
-        type:"doughnut",
-        data:{
-            labels:["Pemasukan","Pengeluaran"],
-            datasets:[{
-                data:[result.income,result.expense],
-                backgroundColor:["#2563eb","#f87171"],
-                borderWidth:0
+    accountChart = new Chart(document.getElementById("accountChart"), {
+        type: "doughnut",
+        data: {
+            labels: ["Cash", "Bank"],
+            datasets: [{
+                data: [
+                    Math.max(0, data.cash),
+                    Math.max(0, data.bank)
+                ],
+                backgroundColor: ["#f2a93b", "#315efb"],
+                borderWidth: 0
             }]
         },
-        options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            cutout:"72%",
-            plugins:{legend:{position:"bottom"}}
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "70%",
+            plugins: {
+                legend: { position: "bottom" }
+            }
         }
     });
 }
 
-// ========================================
-// 6. DAFTAR TRANSAKSI
-// ========================================
+/* =========================================
+   TRANSAKSI
+========================================= */
 
-function renderTransactions() {
-    const tbody = document.getElementById("transactionTable");
-    const search = document.getElementById("searchTransaction").value.toLowerCase().trim();
-    const type = document.getElementById("filterType").value;
+document.getElementById("transactionForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-    const filtered = [...transactions]
-        .filter(item => {
-            const matchSearch =
-                item.description.toLowerCase().includes(search) ||
-                item.category.toLowerCase().includes(search);
+    const id = document.getElementById("editId").value;
+    const type = document.getElementById("type").value;
+    const amount = Number(document.getElementById("amount").value);
+    const account = document.getElementById("account").value;
 
-            const matchType = type === "all" || item.type === type;
-
-            return matchSearch && matchType;
-        })
-        .sort((a,b) => b.date.localeCompare(a.date));
-
-    if (!filtered.length) {
-        tbody.innerHTML = `
-            <tr><td colspan="7">
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>Transaksi tidak ditemukan.
-                </div>
-            </td></tr>`;
+    if (!amount || amount <= 0) {
+        alert("Masukkan jumlah transaksi yang benar.");
         return;
     }
 
-    tbody.innerHTML = filtered.map(item => `
-        <tr>
-            <td class="transaction-name">${escapeHTML(item.description)}</td>
-            <td>${escapeHTML(item.category)}</td>
-            <td>${formatDate(item.date)}</td>
-            <td>${item.type === "income" ? '<span class="badge-income">Pemasukan</span>' : '<span class="badge-expense">Pengeluaran</span>'}</td>
-            <td>${accountName(item.account || "cash")}</td>
-            <td class="${item.type === "income" ? "amount-income" : "amount-expense"}">
-                ${item.type === "income" ? "+" : "-"} ${formatRupiah(item.amount)}
-            </td>
-            <td>
-                <button class="action-btn" onclick="editTransaction('${item.id}')" title="Edit">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="action-btn" onclick="deleteTransaction('${item.id}')" title="Hapus">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `).join("");
+    const item = {
+        id: id || String(Date.now()),
+        type,
+        description: document.getElementById("description").value.trim(),
+        category: document.getElementById("category").value,
+        amount,
+        account,
+        date: document.getElementById("transactionDate").value
+    };
+
+    if (!item.description || !item.date) {
+        alert("Lengkapi semua data transaksi.");
+        return;
+    }
+
+    const oldItem = id ? transactions.find(t => t.id === id) : null;
+
+    // Cek saldo jika transaksi diubah
+    const current = calculateFinance();
+
+    if (oldItem) {
+        if (oldItem.account === account && oldItem.type === "expense") {
+            const available = (account === "cash" ? current.cash : current.bank) + Number(oldItem.amount);
+            if (amount > available) {
+                alert("Saldo tidak mencukupi untuk pengeluaran ini.");
+                return;
+            }
+        } else if (oldItem.account === account && oldItem.type === "income") {
+            // Pemasukan tidak membutuhkan validasi saldo
+        }
+    } else if (type === "expense") {
+        const available = account === "cash" ? current.cash : current.bank;
+        if (amount > available) {
+            alert("Saldo " + accountName(account) + " tidak mencukupi.");
+            return;
+        }
+    }
+
+    if (id) {
+        const index = transactions.findIndex(t => t.id === id);
+        transactions[index] = item;
+    } else {
+        transactions.push(item);
+    }
+
+    saveData();
+    resetTransactionForm();
+    renderAll();
+    alert("Transaksi berhasil disimpan.");
+});
+
+function resetTransactionForm() {
+    document.getElementById("transactionForm").reset();
+    document.getElementById("editId").value = "";
+    document.getElementById("transactionDate").value = today;
+    document.getElementById("saveTransaction").innerHTML =
+        '<i class="bi bi-plus-circle me-1"></i> Simpan Transaksi';
+}
+
+function renderTransactions() {
+    const keyword = document.getElementById("searchTransaction").value.toLowerCase();
+
+    const filtered = [...transactions]
+        .filter(item =>
+            item.description.toLowerCase().includes(keyword) ||
+            item.category.toLowerCase().includes(keyword)
+        )
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+    let html = "";
+
+    if (filtered.length === 0) {
+        html = `<div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>Belum ada transaksi yang ditemukan.</p>
+        </div>`;
+    } else {
+        html = `<div class="table-responsive"><table>
+            <thead><tr>
+                <th>Keterangan</th>
+                <th>Kategori</th>
+                <th>Jenis</th>
+                <th>Akun</th>
+                <th>Tanggal</th>
+                <th>Jumlah</th>
+                <th>Aksi</th>
+            </tr></thead><tbody>`;
+
+        filtered.forEach(item => {
+            html += `<tr>
+                <td class="fw-semibold">${escapeHTML(item.description)}</td>
+                <td>${escapeHTML(item.category)}</td>
+                <td><span class="${item.type === "income" ? "badge-income" : "badge-expense"}">
+                    ${item.type === "income" ? "Pemasukan" : "Pengeluaran"}
+                </span></td>
+                <td><span class="badge-account">${accountName(item.account || "cash")}</span></td>
+                <td>${escapeHTML(item.date)}</td>
+                <td class="fw-bold ${item.type === "income" ? "text-success" : "text-danger"}">
+                    ${rupiah(item.amount)}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-light text-primary me-1" onclick="editTransaction('${item.id}')">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-light text-danger" onclick="deleteTransaction('${item.id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+        });
+
+        html += "</tbody></table></div>";
+    }
+
+    document.getElementById("transactionTable").innerHTML = html;
+}
+
+function editTransaction(id) {
+    const item = transactions.find(t => t.id === id);
+    if (!item) return;
+
+    document.getElementById("editId").value = item.id;
+    document.getElementById("type").value = item.type;
+    document.getElementById("description").value = item.description;
+    document.getElementById("category").value = item.category;
+    document.getElementById("amount").value = item.amount;
+    document.getElementById("account").value = item.account || "cash";
+    document.getElementById("transactionDate").value = item.date;
+
+    document.getElementById("saveTransaction").innerHTML =
+        '<i class="bi bi-check-circle me-1"></i> Perbarui Transaksi';
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function deleteTransaction(id) {
+    if (!confirm("Yakin ingin menghapus transaksi ini?")) return;
+
+    transactions = transactions.filter(item => item.id !== id);
+    saveData();
+    renderAll();
 }
 
 document.getElementById("searchTransaction").addEventListener("input", renderTransactions);
-document.getElementById("filterType").addEventListener("change", renderTransactions);
 
-// ========================================
-// 7. TAMBAH DAN EDIT TRANSAKSI
-// ========================================
+/* =========================================
+   TRANSFER CASH DAN BANK
+========================================= */
 
-function openTransactionModal() {
-    document.getElementById("transactionForm").reset();
-    document.getElementById("transactionId").value = "";
-    document.getElementById("date").value = getToday();
-    document.getElementById("modalTitle").textContent = "Tambah Transaksi";
-    transactionModal.show();
-}
-
-document.getElementById("transactionForm").addEventListener("submit", event => {
+document.getElementById("transferForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const id = document.getElementById("transactionId").value;
-    const description = document.getElementById("description").value.trim();
-    const type = document.getElementById("type").value;
-    const account = document.getElementById("account").value;
-    const category = document.getElementById("category").value;
-    const amount = Number(document.getElementById("amount").value);
-    const date = document.getElementById("date").value;
-
-    if (!description || !date || !Number.isSafeInteger(amount) || amount <= 0) {
-        alert("Isi data dengan benar. Jumlah harus berupa angka bulat positif.");
-        return;
-    }
-
-    const previous = [...transactions];
-
-    const data = {
-        id: id || createId(),
-        description,
-        type,
-        account,
-        category,
-        amount,
-        date
-    };
-
-    if (id) {
-        transactions = transactions.map(item =>
-            String(item.id) === String(id) ? data : item
-        );
-    } else {
-        transactions.push(data);
-    }
-
-    if (!saveArray(STORAGE_KEY, transactions)) {
-        transactions = previous;
-        return;
-    }
-
-    transactionModal.hide();
-    renderAll();
-
-    alert(id ? "Transaksi berhasil diperbarui!" : "Transaksi berhasil ditambahkan!");
-});
-
-function editTransaction(id) {
-    const item = transactions.find(item => String(item.id) === String(id));
-
-    if (!item) return alert("Transaksi tidak ditemukan.");
-
-    document.getElementById("transactionId").value = item.id;
-    document.getElementById("description").value = item.description;
-    document.getElementById("type").value = item.type;
-    document.getElementById("account").value = item.account || "cash";
-    document.getElementById("category").value = item.category;
-    document.getElementById("amount").value = item.amount;
-    document.getElementById("date").value = item.date;
-
-    document.getElementById("modalTitle").textContent = "Edit Transaksi";
-    transactionModal.show();
-}
-
-// ========================================
-// 8. HAPUS TRANSAKSI
-// ========================================
-
-function deleteTransaction(id) {
-    const item = transactions.find(item => String(item.id) === String(id));
-
-    if (!item) return alert("Transaksi tidak ditemukan.");
-
-    if (!confirm(`Hapus transaksi "${item.description}"?`)) return;
-
-    const previous = [...transactions];
-
-    transactions = transactions.filter(item =>
-        String(item.id) !== String(id)
-    );
-
-    if (!saveArray(STORAGE_KEY, transactions)) {
-        transactions = previous;
-        return;
-    }
-
-    renderAll();
-    alert("Transaksi berhasil dihapus!");
-}
-
-// ========================================
-// 9. TRANSFER CASH DAN BANK
-// ========================================
-
-function renderTransfers() {
-    const result = calculateFinance();
-
-    document.getElementById("transferCashBalance").textContent =
-        formatRupiah(result.cashBalance);
-
-    document.getElementById("transferBankBalance").textContent =
-        formatRupiah(result.bankBalance);
-
-    const tbody = document.getElementById("transferTable");
-
-    const sorted = [...transfers].sort((a,b) => b.date.localeCompare(a.date));
-
-    if (!sorted.length) {
-        tbody.innerHTML = `
-            <tr><td colspan="5">
-                <div class="empty-state">
-                    <i class="bi bi-arrow-left-right"></i>Belum ada riwayat transfer.
-                </div>
-            </td></tr>`;
-        return;
-    }
-
-    tbody.innerHTML = sorted.map(item => `
-        <tr>
-            <td class="transaction-name">${escapeHTML(item.description)}</td>
-            <td>${formatDate(item.date)}</td>
-            <td>${accountName(item.from)} → ${accountName(item.to)}</td>
-            <td class="amount-income">${formatRupiah(item.amount)}</td>
-            <td>
-                <button class="action-btn" onclick="deleteTransfer('${item.id}')" title="Hapus transfer">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `).join("");
-}
-
-document.getElementById("transferForm").addEventListener("submit", event => {
-    event.preventDefault();
-
+    const description = document.getElementById("transferDescription").value.trim();
     const from = document.getElementById("transferFrom").value;
     const to = document.getElementById("transferTo").value;
     const amount = Number(document.getElementById("transferAmount").value);
     const date = document.getElementById("transferDate").value;
-    const description =
-        document.getElementById("transferDescription").value.trim() ||
-        "Transfer antar sumber dana";
 
     if (from === to) {
-        alert("Sumber dan tujuan transfer tidak boleh sama.");
+        alert("Akun asal dan tujuan tidak boleh sama.");
         return;
     }
 
-    if (!Number.isSafeInteger(amount) || amount <= 0 || !date) {
-        alert("Masukkan jumlah dan tanggal transfer yang benar.");
+    if (!description || !amount || amount <= 0 || !date) {
+        alert("Lengkapi data transfer dengan benar.");
         return;
     }
 
-    const result = calculateFinance();
-    const available = from === "cash" ? result.cashBalance : result.bankBalance;
+    const balance = calculateFinance();
+    const available = from === "cash" ? balance.cash : balance.bank;
 
     if (amount > available) {
-        alert(`Saldo ${accountName(from)} tidak mencukupi. Saldo tersedia: ${formatRupiah(available)}`);
+        alert("Saldo " + accountName(from) + " tidak mencukupi.");
         return;
     }
 
     transfers.push({
-        id:createId(),
+        id: String(Date.now()),
+        description,
         from,
         to,
         amount,
-        date,
-        description
+        date
     });
 
-    if (!saveArray(TRANSFER_KEY, transfers)) {
-        transfers.pop();
-        return;
-    }
+    saveData();
 
-    document.getElementById("transferForm").reset();
-    document.getElementById("transferDate").value = getToday();
+    this.reset();
+    document.getElementById("transferDate").value = today;
+    document.getElementById("transferFrom").value = "cash";
+    document.getElementById("transferTo").value = "bank";
 
     renderAll();
-    alert("Transfer berhasil dicatat!");
+    alert("Transfer berhasil diproses.");
 });
 
-function deleteTransfer(id) {
-    const item = transfers.find(item => String(item.id) === String(id));
+function renderTransfers() {
+    const balance = calculateFinance();
 
-    if (!item) return alert("Transfer tidak ditemukan.");
+    document.getElementById("transferCashBalance").textContent = rupiah(balance.cash);
+    document.getElementById("transferBankBalance").textContent = rupiah(balance.bank);
 
-    if (!confirm("Hapus catatan transfer ini? Saldo akan dikembalikan seperti sebelum transfer.")) return;
+    const sorted = [...transfers].sort((a, b) => b.date.localeCompare(a.date));
 
-    const previous = [...transfers];
+    let html = "";
 
-    transfers = transfers.filter(item => String(item.id) !== String(id));
+    if (sorted.length === 0) {
+        html = `<div class="empty-state">
+            <i class="bi bi-arrow-left-right"></i>
+            <p>Belum ada riwayat transfer.</p>
+        </div>`;
+    } else {
+        html = `<div class="table-responsive"><table>
+            <thead><tr>
+                <th>Keterangan</th>
+                <th>Tanggal</th>
+                <th>Rute</th>
+                <th>Jumlah</th>
+                <th>Aksi</th>
+            </tr></thead><tbody>`;
 
-    if (!saveArray(TRANSFER_KEY, transfers)) {
-        transfers = previous;
-        return;
+        sorted.forEach(item => {
+            html += `<tr>
+                <td class="fw-semibold">${escapeHTML(item.description)}</td>
+                <td>${escapeHTML(item.date)}</td>
+                <td><span class="route-text">${accountName(item.from)} <i class="bi bi-arrow-right mx-1"></i> ${accountName(item.to)}</span></td>
+                <td class="fw-bold">${rupiah(item.amount)}</td>
+                <td>
+                    <button class="btn btn-sm btn-light text-danger" onclick="deleteTransfer('${item.id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+        });
+
+        html += "</tbody></table></div>";
     }
 
-    renderAll();
-    alert("Catatan transfer berhasil dihapus.");
+    document.getElementById("transferTable").innerHTML = html;
 }
 
-// ========================================
-// 10. PERHITUNGAN SALDO TERMASUK TRANSFER
-// ========================================
+function deleteTransfer(id) {
+    if (!confirm("Hapus riwayat transfer ini? Saldo akan dikembalikan ke perhitungan sebelumnya.")) return;
 
-// Saldo transfer dihitung sebagai perpindahan,
-// bukan pemasukan atau pengeluaran baru.
+    transfers = transfers.filter(item => item.id !== id);
+    saveData();
+    renderAll();
+}
 
-const originalCalculateFinance = calculateFinance;
-
-calculateFinance = function(data = transactions) {
-    const result = originalCalculateFinance(data);
-
-    const cashTransferIn = transfers
-        .filter(item => item.to === "cash")
-        .reduce((sum,item) => sum + Number(item.amount),0);
-
-    const cashTransferOut = transfers
-        .filter(item => item.from === "cash")
-        .reduce((sum,item) => sum + Number(item.amount),0);
-
-    const bankTransferIn = transfers
-        .filter(item => item.to === "bank")
-        .reduce((sum,item) => sum + Number(item.amount),0);
-
-    const bankTransferOut = transfers
-        .filter(item => item.from === "bank")
-        .reduce((sum,item) => sum + Number(item.amount),0);
-
-    result.cashBalance += cashTransferIn - cashTransferOut;
-    result.bankBalance += bankTransferIn - bankTransferOut;
-    result.balance = result.cashBalance + result.bankBalance;
-
-    return result;
-};
-
-// ========================================
-// 11. LAPORAN BULANAN
-// ========================================
+/* =========================================
+   LAPORAN
+========================================= */
 
 function renderReports() {
     const month = document.getElementById("reportMonth").value;
@@ -1392,180 +1606,148 @@ function renderReports() {
 
     const income = filtered
         .filter(item => item.type === "income")
-        .reduce((sum,item) => sum + Number(item.amount),0);
+        .reduce((sum, item) => sum + Number(item.amount), 0);
 
     const expense = filtered
         .filter(item => item.type === "expense")
-        .reduce((sum,item) => sum + Number(item.amount),0);
+        .reduce((sum, item) => sum + Number(item.amount), 0);
 
-    document.getElementById("reportIncome").textContent = formatRupiah(income);
-    document.getElementById("reportExpense").textContent = formatRupiah(expense);
-    document.getElementById("reportBalance").textContent = formatRupiah(income-expense);
+    document.getElementById("reportIncome").textContent = rupiah(income);
+    document.getElementById("reportExpense").textContent = rupiah(expense);
+    document.getElementById("reportDifference").textContent = rupiah(income - expense);
 
-    const tbody = document.getElementById("reportTable");
+    let html = "";
 
-    if (!filtered.length) {
-        tbody.innerHTML = `
-            <tr><td colspan="6">
-                <div class="empty-state">
-                    <i class="bi bi-calendar-x"></i>Belum ada transaksi pada bulan ini.
-                </div>
-            </td></tr>`;
-        return;
+    if (filtered.length === 0) {
+        html = `<div class="empty-state">
+            <i class="bi bi-file-earmark-bar-graph"></i>
+            <p>Belum ada transaksi pada periode ini.</p>
+        </div>`;
+    } else {
+        html = `<div class="table-responsive"><table>
+            <thead><tr>
+                <th>Tanggal</th>
+                <th>Keterangan</th>
+                <th>Kategori</th>
+                <th>Jenis</th>
+                <th>Akun</th>
+                <th>Jumlah</th>
+            </tr></thead><tbody>`;
+
+        filtered.sort((a, b) => b.date.localeCompare(a.date)).forEach(item => {
+            html += `<tr>
+                <td>${escapeHTML(item.date)}</td>
+                <td>${escapeHTML(item.description)}</td>
+                <td>${escapeHTML(item.category)}</td>
+                <td>${item.type === "income" ? "Pemasukan" : "Pengeluaran"}</td>
+                <td>${accountName(item.account || "cash")}</td>
+                <td class="fw-bold ${item.type === "income" ? "text-success" : "text-danger"}">${rupiah(item.amount)}</td>
+            </tr>`;
+        });
+
+        html += "</tbody></table></div>";
     }
 
-    tbody.innerHTML = filtered.map(item => `
-        <tr>
-            <td class="transaction-name">${escapeHTML(item.description)}</td>
-            <td>${escapeHTML(item.category)}</td>
-            <td>${formatDate(item.date)}</td>
-            <td>${item.type === "income" ? "Pemasukan" : "Pengeluaran"}</td>
-            <td>${accountName(item.account || "cash")}</td>
-            <td class="${item.type === "income" ? "amount-income" : "amount-expense"}">
-                ${formatRupiah(item.amount)}
-            </td>
-        </tr>
-    `).join("");
+    document.getElementById("reportTable").innerHTML = html;
 }
 
-// ========================================
-// 12. PROFIL DAN SALDO AWAL
-// ========================================
+/* =========================================
+   PROFIL DAN SALDO AWAL
+========================================= */
 
 function renderProfile() {
-    document.getElementById("profileName").value = profile.name;
-    document.getElementById("profileEmail").value = profile.email;
-    document.getElementById("cashOpeningBalance").value = profile.cashOpeningBalance;
-    document.getElementById("bankOpeningBalance").value = profile.bankOpeningBalance;
+    document.getElementById("profileName").value = profile.name || "";
+    document.getElementById("profileEmail").value = profile.email || "";
+    document.getElementById("openingCash").value = profile.openingCash || 0;
+    document.getElementById("openingBank").value = profile.openingBank || 0;
 
-    const initial = (profile.name.trim()[0] || "U").toUpperCase();
-
-    document.getElementById("profileAvatar").textContent = initial;
-    document.getElementById("topAvatar").textContent = initial;
-    document.getElementById("topName").textContent = profile.name;
+    document.getElementById("profileDisplayName").textContent = profile.name || "Pengguna";
+    document.getElementById("sidebarName").textContent = profile.name || "Pengguna";
+    document.getElementById("sidebarAvatar").textContent =
+        (profile.name || "U").charAt(0).toUpperCase();
 }
 
-document.getElementById("profileForm").addEventListener("submit", event => {
+document.getElementById("profileForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const name = document.getElementById("profileName").value.trim();
-    const email = document.getElementById("profileEmail").value.trim();
-    const cash = Number(document.getElementById("cashOpeningBalance").value);
-    const bank = Number(document.getElementById("bankOpeningBalance").value);
+    profile.name = document.getElementById("profileName").value.trim();
+    profile.email = document.getElementById("profileEmail").value.trim();
 
-    if (!name || !Number.isSafeInteger(cash) || !Number.isSafeInteger(bank) ||
-        cash < 0 || bank < 0) {
-        alert("Pastikan nama dan saldo awal sudah benar.");
-        return;
-    }
-
-    const previous = {...profile};
-
-    profile = {
-        name,
-        email,
-        cashOpeningBalance:cash,
-        bankOpeningBalance:bank
-    };
-
-    try {
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-    } catch {
-        profile = previous;
-        alert("Profil gagal disimpan.");
-        return;
-    }
-
+    saveData();
     renderProfile();
-    renderAll();
-    alert("Profil dan saldo awal berhasil disimpan!");
+    alert("Profil berhasil diperbarui.");
 });
 
-// ========================================
-// 13. BACKUP DATA
-// ========================================
+document.getElementById("openingBalanceForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    if (!confirm("Mengubah saldo awal akan memengaruhi perhitungan saldo saat ini. Lanjutkan?")) return;
+
+    profile.openingCash = Number(document.getElementById("openingCash").value) || 0;
+    profile.openingBank = Number(document.getElementById("openingBank").value) || 0;
+
+    saveData();
+    renderAll();
+    alert("Saldo awal berhasil disimpan.");
+});
+
+/* =========================================
+   BACKUP DAN HAPUS DATA
+========================================= */
 
 function exportData() {
     const backup = {
-        application:"FinTrack",
-        version:"2.0",
-        exportedAt:new Date().toISOString(),
         profile,
         transactions,
-        transfers
+        transfers,
+        exportedAt: new Date().toISOString()
     };
 
     const blob = new Blob(
-        [JSON.stringify(backup,null,2)],
-        {type:"application/json"}
+        [JSON.stringify(backup, null, 2)],
+        { type: "application/json" }
     );
 
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "fintrack-backup.json";
+    link.download = "fintrack-backup-" + today + ".json";
     link.click();
 
     URL.revokeObjectURL(url);
 }
 
-// ========================================
-// 14. HAPUS SEMUA DATA AKTIVITAS
-// ========================================
-
-function clearAllTransactions() {
-    if (!transactions.length && !transfers.length) {
-        alert("Belum ada data aktivitas.");
-        return;
-    }
-
-    if (!confirm("PERINGATAN! Hapus semua transaksi dan riwayat transfer? Saldo awal tetap tersimpan.")) return;
-
-    const oldTransactions = [...transactions];
-    const oldTransfers = [...transfers];
+function clearAllData() {
+    if (!confirm("Yakin ingin menghapus seluruh transaksi dan riwayat transfer? Saldo awal tetap disimpan.")) return;
 
     transactions = [];
     transfers = [];
 
-    if (!saveArray(STORAGE_KEY, transactions) ||
-        !saveArray(TRANSFER_KEY, transfers)) {
-
-        transactions = oldTransactions;
-        transfers = oldTransfers;
-
-        saveArray(STORAGE_KEY, transactions);
-        saveArray(TRANSFER_KEY, transfers);
-
-        return;
-    }
-
+    saveData();
     renderAll();
-    alert("Seluruh aktivitas berhasil dihapus. Saldo awal tetap tersimpan.");
+
+    alert("Seluruh aktivitas berhasil dihapus.");
 }
 
-// ========================================
-// 15. PERBARUI SELURUH TAMPILAN
-// ========================================
+/* =========================================
+   RENDER SEMUA KOMPONEN
+========================================= */
 
 function renderAll() {
     renderDashboard();
     renderTransactions();
     renderTransfers();
     renderReports();
+    renderProfile();
 }
 
-// ========================================
-// 16. JALANKAN APLIKASI
-// ========================================
+/* =========================================
+   MULAI APLIKASI
+========================================= */
 
-document.getElementById("reportMonth").value = getToday().slice(0,7);
-document.getElementById("date").value = getToday();
-document.getElementById("transferDate").value = getToday();
-
-renderProfile();
 renderAll();
-
 </script>
+
 </body>
 </html>
